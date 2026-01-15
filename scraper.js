@@ -16,7 +16,7 @@ async function scrapeGoogleMaps(query, limit = 20) {
     try {
         await page.waitForSelector('div[role="feed"]', { timeout: 15000 });
     } catch (e) {
-        console.log("Feed selector not found, attempting fallback...");
+
     }
 
     const results = [];
@@ -40,7 +40,7 @@ async function scrapeGoogleMaps(query, limit = 20) {
 
                 console.log(`Scraped: ${name}`);
             } catch (err) {
-             
+
             }
         }
 
@@ -91,15 +91,19 @@ async function extractDetails(page, context) {
 
         details.logo = await page.$eval('img[contenteditable="false"]', node => node.src).catch(() => '');
 
-        if (details.website) {
+    } catch (e) {
+
+    }
+
+    if (details.website) {
+        try {
             const siteData = await scrapeWebsiteData(context, details.website);
             details.email = siteData.email;
             if (siteData.logo) details.logo = siteData.logo;
             details.socials = siteData.socials;
-        }
+        } catch (e) {
 
-    } catch (e) {
-        // Some fields might be missing
+        }
     }
 
     return details;
@@ -161,7 +165,7 @@ async function scrapeWebsiteData(context, url) {
         });
 
     } catch (e) {
-        // Ignore errors
+
     } finally {
         if (newPage) await newPage.close();
     }

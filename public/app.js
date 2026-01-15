@@ -63,7 +63,6 @@ async function downloadLogo(url, name) {
         document.body.removeChild(link);
         URL.revokeObjectURL(blobUrl);
     } catch (e) {
-        // Redundant fallback if CORS prevents direct download
         window.open(url, '_blank');
     }
 }
@@ -139,7 +138,6 @@ function displayResults(data) {
     });
 }
 
-// Make downloadLogo available to window for the onclick handler
 window.downloadLogo = downloadLogo;
 
 exportBtn.addEventListener('click', () => {
